@@ -1,7 +1,5 @@
 from __future__ import division
-
-execfile('util.py')
-
+from util import *
 
 class MMD(object):
     """
@@ -90,7 +88,7 @@ class MMD(object):
 
         boot_stats = np.zeros(self.n_boot)
 
-        for t in xrange(self.n_boot):
+        for t in range(self.n_boot):
             inds = rand.choice(m+n, m+n, replace=False)
 
             # Split into new data indices
@@ -129,13 +127,13 @@ class MMD(object):
         (n, d2) = y.shape
         assert d1 == d2
 
-        print "\nComputing Gram matrices ..."
+        print("\nComputing Gram matrices ...")
         K, kxx, kyy, kxy = self.compute_gram(x, y)
 
-        print "\nComputing MMD test statistic ..."
+        print("\nComputing MMD test statistic ...")
         stat = self.compute_statistic(kxx, kyy, kxy)
 
-        print "\nComputing MMD test threshold via bootstrapping ..."
+        print("\nComputing MMD test threshold via bootstrapping ...")
         thres, boot_stats = self.compute_threshold(m, n, K)
 
         pval = self.compute_pval(stat, boot_stats)

@@ -1,6 +1,14 @@
 from __future__ import division
 from util import *
 
+def flatten_samples(x):
+    diag_indices = np.ravel_multi_index(np.diag_indices(x.shape[-1]), (x.shape[1], x.shape[2]))
+    x = np.reshape(x, (x.shape[0], -1))
+    # Get the indices of the diagonal elements
+    non_diag_indices = np.setdiff1d(np.arange(x.shape[-1]), diag_indices)
+    return x[:, non_diag_indices]
+
+
 # n: number of samples
 # d: dim of features
 # x: array(n, d)
@@ -56,7 +64,7 @@ class KSD(object):
         val = f(x)
 
         res = np.zeros((n, d))
-        for i in xrange(d):
+        for i in range(d):
             res[:, i] = val - f(neg(x, i))
 
         return res
@@ -80,9 +88,9 @@ class KSD(object):
         k_xx = np.zeros((n, n, d))
         k_x_x = np.zeros((n, n, d))
 
-        for l in xrange(d):
+        for l in range(d):
             if l % 100 == 0:
-                print "\tkxx, k_xx, k_x_x: l = %d ..." % l
+                print("\tkxx, k_xx, k_x_x: l = %d ..." % l)
 
             neg_l_x = self.neg_inv(x, l)
             k_xx[:, :, l] = self.kernel(neg_l_x, x)
@@ -154,16 +162,18 @@ class KSD(object):
         """
         Computes the KSD kappa matrix.
         """
-        kernel_mat = self.kernel(x, x)  # (n, n)
+        xflat = flatten_samples(x)
+        kernel_mat = self.kernel(xflat, xflat)  # (n, n)
         assert is_symmetric(kernel_mat)
         score_mat = self.score(x)  # (n, d)
+        score_mat = flatten_samples(score_mat)
 
-        print "\nComputing kxx, k_xx, k_x_x ..."  # Heavy
-        kernel_res = self.kernel_temp(x)
+        print("\nComputing kxx, k_xx, k_x_x ...")  # Heavy
+        kernel_res = self.kernel_temp(xflat)
 
-        print "\nComputing kernel_diff ..."
+        print("\nComputing kernel_diff ...")
 
-        kdiff_mat = self.kernel_diff(x, kernel_res, arg=1)  # (n, n, d)
+        kdiff_mat = self.kernel_diff(xflat, kernel_res, arg=1)  # (n, n, d)
 
         term1 = score_mat.dot(score_mat.T) * kernel_mat
         assert is_symmetric(term1)
@@ -172,9 +182,9 @@ class KSD(object):
 
         term3 = term2.T
 
-        print "\nComputing kernel_diff2_tr ..."
+        print("\nComputing kernel_diff2_tr ...")
 
-        term4 = self.kernel_diff2_tr(x, kernel_res)  # (n, n)
+        term4 = self.kernel_diff2_tr(xflat, kernel_res)  # (n, n)
         assert is_symmetric(term4)
 
         res = term1 - term2 - term3 + term4
@@ -192,7 +202,7 @@ class KSD(object):
             kappa_vals: array((n, n)), computed KSD kernel matrix.
         """
         assert isinstance(samples, np.ndarray)
-        assert len(samples.shape) == 2
+        #assert len(samples.shape) == 2
 
         kappa_vals = self.kappa(samples)
 

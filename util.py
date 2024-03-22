@@ -1,7 +1,6 @@
 from __future__ import division
 from bisect import bisect, bisect_left
-import cPickle
-import igraph as ig
+#import igraph as ig
 import itertools as it
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -10,30 +9,30 @@ from math import ceil, floor
 import numpy as np
 import scipy as sp
 import os
-import pandas as pd
-import seaborn as sns
+# import pandas as pd
+# import seaborn as sns
 import sys
 import warnings
 from collections import Counter
 from copy import deepcopy
-from itertools import chain, izip
+# from itertools import chain, izip
 from matplotlib.colors import LogNorm
 from numpy import random as rand
 from scipy.linalg import eigvals, norm, expm, svd, pinv
-from operator import itemgetter
-from scipy.sparse import coo_matrix, csr_matrix, csc_matrix, diags, identity, \
-    issparse
-from scipy.spatial.distance import cdist
-from scipy.stats import chisquare, gaussian_kde, probplot
-from scipy.stats import gamma as gamma_dist
+# from operator import itemgetter
+# from scipy.sparse import coo_matrix, csr_matrix, csc_matrix, diags, identity, \
+#     issparse
+# from scipy.spatial.distance import cdist
+# from scipy.stats import chisquare, gaussian_kde, probplot
+# from scipy.stats import gamma as gamma_dist
 from scipy.special import logsumexp
-from scipy.optimize import minimize, minimize_scalar, check_grad
-from sklearn.metrics import roc_curve, auc
+# from scipy.optimize import minimize, minimize_scalar, check_grad
+# from sklearn.metrics import roc_curve, auc
 
 _EPS = 1e-6
 _INF = 1e6
 
-sns.set_style('whitegrid')
+# sns.set_style('whitegrid')
 
 
 # --------------------------------------------------------------------------- #
@@ -359,15 +358,15 @@ def get_triu_index(n, i, j, k=1):
 # I/O
 # --------------------------------------------------------------------------- #
 
-def pckl_write(data, filename):
-    with open(filename, 'w') as f:
-        cPickle.dump(data, f)
+# def pckl_write(data, filename):
+#     with open(filename, 'w') as f:
+#         cPickle.dump(data, f)
 
-    return
+#     return
 
 
-def pckl_read(filename):
-    with open(filename, 'r') as f:
-        data = cPickle.load(f)
+# def pckl_read(filename):
+#     with open(filename, 'r') as f:
+#         data = cPickle.load(f)
 
-    return data
+#     return data
