@@ -117,7 +117,7 @@ def is_sorted(l):
 
 def is_symmetric(A):
     """Check if A is a symmetric matrix."""
-    assert isinstance(A, np.ndarray)
+    #assert isinstance(A, np.ndarray)
     return norm(A - A.T) < _EPS
 
 
@@ -134,7 +134,7 @@ def flatten(l, r=1):
 
 
 def binarize(x):
-    assert isinstance(x, np.ndarray)
+    #assert isinstance(x, np.ndarray)
     return 1 * (x > 0)
 
 
@@ -170,7 +170,7 @@ def nnz(A):
     """
     Returns the number of non-zero elements in A.
     """
-    assert isinstance(A, np).ndarray
+    # assert isinstance(A, np).ndarray
 
     return np.sum(A != 0)
 
@@ -179,7 +179,7 @@ def density(A):
     """
     Computes the density of A.
     """
-    assert isinstance(A, np).ndarray
+    # assert isinstance(A, np).ndarray
 
     return nnz(A) / np.prod(A.shape)
 
@@ -247,7 +247,7 @@ def normalize_rows(A):
     """
     Normalize the rows of array A such that each row sums to 1.
     """
-    assert isinstance(A, np.ndarray)
+    #assert isinstance(A, np.ndarray)
     assert_len(A.shape, 2)  # Check 2-D array
 
     row_sums = A.sum(axis=1)
@@ -262,7 +262,7 @@ def normalize_cols(A):
     """
     Normalize the rows of array A such that each row sums to 1.
     """
-    assert isinstance(A, np.ndarray)
+    #assert isinstance(A, np.ndarray)
     assert_len(A.shape, 2)  # Check 2-D array
 
     row_sums = A.sum(axis=0)

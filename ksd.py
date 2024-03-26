@@ -1,5 +1,7 @@
 from __future__ import division
 from util import *
+import jax
+# import jax.numpy as np
 
 def flatten_samples(x):
     diag_indices = np.ravel_multi_index(np.diag_indices(x.shape[-1]), (x.shape[1], x.shape[2]))
@@ -85,17 +87,14 @@ class KSD(object):
         kxx = self.kernel(x, x)  # (n, n)
         assert_shape(kxx, (n, n))
 
-        k_xx = np.zeros((n, n, d))
-        k_x_x = np.zeros((n, n, d))
-
-        for l in range(d):
-            if l % 100 == 0:
-                print("\tkxx, k_xx, k_x_x: l = %d ..." % l)
-
+        def kernel_diff(l):
             neg_l_x = self.neg_inv(x, l)
-            k_xx[:, :, l] = self.kernel(neg_l_x, x)
-            k_x_x[:, :, l] = self.kernel(neg_l_x, neg_l_x)
+            return self.kernel(neg_l_x, x), self.kernel(neg_l_x, neg_l_x)
 
+        kernel_diffvec = jax.vmap(kernel_diff, (0,))
+        res = kernel_diffvec(np.arange(d))
+        k_xx = res[0].transpose((1, 2, 0))
+        k_x_x = res[1].transpose((1, 2, 0))
         return [kxx, k_xx, k_x_x]
 
     def kernel_diff(self, x, kernel_res, arg):
@@ -170,7 +169,6 @@ class KSD(object):
 
         print("\nComputing kxx, k_xx, k_x_x ...")  # Heavy
         kernel_res = self.kernel_temp(xflat)
-
         print("\nComputing kernel_diff ...")
 
         kdiff_mat = self.kernel_diff(xflat, kernel_res, arg=1)  # (n, n, d)
@@ -201,7 +199,7 @@ class KSD(object):
         Returns:
             kappa_vals: array((n, n)), computed KSD kernel matrix.
         """
-        assert isinstance(samples, np.ndarray)
+        # assert isinstance(samples, np.ndarray)
         #assert len(samples.shape) == 2
 
         kappa_vals = self.kappa(samples)
